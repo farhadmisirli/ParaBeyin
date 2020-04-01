@@ -1,32 +1,31 @@
 package com.parabeyin.api.security.jwt;
-/* Created by Farhad on 2020-03-30 */
+/* Created by Farhad on 2020-03-31 */
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import lombok.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.io.Serializable;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+//@Service
 @Component
-public class JwtTokenUtil implements Serializable {
+public class JwtUtil  {
 
     private static final long serialVersionUID = -2550185165626007488L;
 
-    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 1000;
+    public static final long JWT_TOKEN_VALIDITY = 2 * 60 * 1000;
 
     Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
 
-    //@Value("${jwt.secret}")
     private String secret = "test.com";
 
     //retrieve username from jwt token
@@ -54,31 +53,26 @@ public class JwtTokenUtil implements Serializable {
         return claimsResolver.apply(claims);
     }
     private Claims getAllClaimsFromToken(String token) {
-        System.out.println("here");
-
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-        //return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-
     }
 
     private Boolean isTokenExpired(String token) {
-
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, userDetails.getUsername());
+        return doGenerateToken(claims, username);
     }
 
     private String doGenerateToken(Map<String, Object> claims, String subject) {
 
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
                 .signWith(key).compact();
-                //.signWith(SignatureAlgorithm.HS512, secret).compact();
     }
+
 
     //validate token
     public Boolean validateToken(String token, UserDetails userDetails) {
@@ -98,3 +92,4 @@ public class JwtTokenUtil implements Serializable {
         return false;
     }
 }
+
