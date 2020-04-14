@@ -21,7 +21,7 @@ public class JwtUtil  {
 
     private static final long serialVersionUID = -2550185165626007488L;
 
-    public static final long JWT_TOKEN_VALIDITY = 2 * 60 * 1000;
+    public static final long JWT_TOKEN_VALIDITY = 10 * 60 * 1000;
 
     Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 

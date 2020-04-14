@@ -3,8 +3,11 @@ package com.parabeyin.api.controller;
 
 import com.parabeyin.api.entity.User;
 import com.parabeyin.api.entity.dto.UserDto;
+import com.parabeyin.api.entity.dto.UserReponseDto;
+import com.parabeyin.api.entity.dto.UserUpdateDto;
 import com.parabeyin.api.security.jwt.JwtUtil;
 import com.parabeyin.api.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +30,13 @@ public class AuthController {
 
     @Autowired
     UserService userDetailsService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<User> register(@Valid @RequestBody User user) {
@@ -55,6 +65,58 @@ public class AuthController {
     public ResponseEntity<String> logout() {
         return ResponseEntity.ok("logout success");
     }
+
+    @RequestMapping(value = "/profile",  method = RequestMethod.GET)
+    public ResponseEntity<User> profile() {
+        User currentUser = userService.getLoggedInUser();
+        UserReponseDto userResponseDto  = modelMapper.map(currentUser, UserReponseDto.class);
+        return ResponseEntity.ok(currentUser);
+    }
+
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    public ResponseEntity<?> update(@RequestBody @Valid UserUpdateDto userUpdateDto) {
+
+        User user = userService.getLoggedInUser();
+        if(!validEmail(user.getId(), userUpdateDto.getEmail())) {
+            return new ResponseEntity<>(
+                    "This email already in use",
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        user.setFirstname(userUpdateDto.getFirstname());
+        user.setLastname(userUpdateDto.getLastname());
+        user.setEmail(userUpdateDto.getEmail());
+        user.setBirthday(userUpdateDto.getBirthday());
+        user.setGender(userUpdateDto.getGender());
+        user = userService.update(user);
+
+        return ResponseEntity.ok(modelMapper.map(user, UserReponseDto.class));
+    }
+
+    private boolean validEmail(long id, String email) {
+
+        User user = userService.getUserByEmail(email);
+
+        if(user == null || user.getId() == id) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean validUsername(long id, String username) {
+
+        User user = userService.getUserByUsername(username);
+
+        if(user == null || user.getId() == id) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+
 
 
 }

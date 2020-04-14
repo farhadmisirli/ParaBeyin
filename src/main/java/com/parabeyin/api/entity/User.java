@@ -3,9 +3,12 @@ package com.parabeyin.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.parabeyin.api.entity.annotations.UniqueEmail;
+import com.parabeyin.api.entity.annotations.UniqueUsername;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -16,7 +19,8 @@ import java.util.Date;
 
 @Entity
 @Data
-@Table(name = "pb_users")
+@Table(name="pb_users")
+
 public class User {
 
     @Id
@@ -30,24 +34,27 @@ public class User {
     private String lastname;
 
     @NotBlank
+    @UniqueUsername(message = "This username already in use")
     private String username;
 
     @NotBlank
     @Email
+    @UniqueEmail(message = "This username already in use")
     private String email;
 
     @NotBlank
     private String password;
 
-
     @NotNull
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date birthday;
 
-    private String profile_image;
-
     @NotNull
     private Character gender;
+
+    private String profile_image;
+
+
 
 }
 
