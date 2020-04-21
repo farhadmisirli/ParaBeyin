@@ -1,0 +1,90 @@
+{
+	"apis": {
+		"baseUrl": "http://134.122.74.181:8080/api-0.0.1-SNAPSHOT/",
+		"User apis": {
+			"register": {
+				"url": "/api/auth/register",
+				"method": "POST",
+				"fields": {
+					"firstname": "Farhad",
+					"lastname": "Misirli",
+					"email": "test@mail.com",
+					"username": "admin",
+					"password": "admin",
+					"gender": "1",
+					"birthday": "1996-08-21"
+				}
+			},
+			"login": {
+				"url": "/api/auth/login",
+				"method": "POST",
+				"fields": {
+					"username": "admin",
+					"password": "admin"
+				}
+			},
+			"logout": {
+				"url": "/api/auth/logout",
+				"method": "GET"
+			},
+			"update": {
+				"url": "/api/auth/update",
+				"method": "PUT",
+				"fields": {
+					"firstname": "Farhad",
+					"lastname": "Misirli",
+					"email": "test@mail.com",
+					"gender": "1",
+					"birthday": "1996-08-21"
+				}
+			},
+			"profile": {
+				"url": "/api/auth/profile",
+				"method": "GET"
+			}
+		},
+		"Page apis": {
+			"FAQ page": {
+				"url": "/api/page/faq",
+				"method": "GET"
+			},
+			"How To Play": {
+				"url": "/api/page/how-to-play",
+				"method": "GET"
+			},
+			"Contact": {
+				"url": "/api/page/contact",
+				"method": "POST",
+				"fields": {
+					"reason": "Reason text",
+					"email": "example@gmail.com",
+					"message": "Message here"
+				}
+			}
+		},
+		"Game apis": {
+			"game": {
+				"url": "/api/game/",
+				"method": "GET",
+				"description": "Get next game"
+			},
+			"game's question": {
+				"url": "/api/game/{game_id}/{question_id}",
+				"method": "GET",
+				"description": "Get question's answers"
+			},
+			"post your answer": {
+				"url": "/api/game/{game_id}/{question_id}",
+				"method": "POST",
+				"fields": {
+					"answer_id": "1"
+				},
+				"description": "Post your answer"
+			},
+			"get question statistics": {
+				"url": "/api/{game_id}/{question_id}/statistics",
+				"method": "GET"
+			}
+		}
+	}
+}
