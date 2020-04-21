@@ -3,7 +3,7 @@ package com.parabeyin.api.controller;
 
 import com.parabeyin.api.entity.Faq;
 import com.parabeyin.api.entity.Page;
-import com.parabeyin.api.entity.dto.ContactDto;
+import com.parabeyin.api.entity.Contact;
 import com.parabeyin.api.service.PageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,15 +19,14 @@ public class PageController {
 
     @Autowired
     private PageService pageService;
-
     @RequestMapping(value = "/faq", method = RequestMethod.GET)
     public ResponseEntity<List<Faq>> getFaqList() {
         return ResponseEntity.ok(pageService.findFaqsByActive(true));
     }
 
     @RequestMapping(value = "/contact", method = RequestMethod.POST)
-    public ResponseEntity<String> contact(@Valid @RequestBody ContactDto contactDto) {
-        return ResponseEntity.ok("Success");
+    public ResponseEntity<Contact> contact(@Valid @RequestBody Contact contact) {
+        return new ResponseEntity<>(pageService.saveContact(contact), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{slug}", method = RequestMethod.GET)
@@ -38,7 +37,6 @@ public class PageController {
         }
         return new ResponseEntity("Page Not Found",HttpStatus.NOT_FOUND);
     }
-
 
 
 }

@@ -39,8 +39,9 @@ public class AuthController {
 
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ResponseEntity<User> register(@Valid @RequestBody User user) {
-        return ResponseEntity.ok(userDetailsService.save(user));
+    public ResponseEntity<UserReponseDto> register(@Valid @RequestBody User user) {
+        User newUser = userDetailsService.save(user);
+        return new ResponseEntity<>(modelMapper.map(newUser, UserReponseDto.class), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -67,10 +68,9 @@ public class AuthController {
     }
 
     @RequestMapping(value = "/profile",  method = RequestMethod.GET)
-    public ResponseEntity<User> profile() {
+    public ResponseEntity<UserReponseDto> profile() {
         User currentUser = userService.getLoggedInUser();
-        UserReponseDto userResponseDto  = modelMapper.map(currentUser, UserReponseDto.class);
-        return ResponseEntity.ok(currentUser);
+        return ResponseEntity.ok(modelMapper.map(currentUser, UserReponseDto.class));
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
